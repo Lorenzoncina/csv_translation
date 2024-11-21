@@ -48,16 +48,18 @@ if __name__ == "__main__":
 
     # load input csv
     try:
-        df = pd.read_csv(input_csv, encoding='utf-8')  # Default to UTF-8
+        df = pd.read_csv(input_csv, encoding='Windows-1252')  # Default to UTF-8
+        print("Sucefully loaded with Windows-1252 coding")
     except UnicodeDecodeError:
         print("Failed to read the file with UTF-8 encoding. Trying 'latin1'...")
         df = pd.read_csv(input_csv, encoding='latin1')  # Fallback to latin1
 
     #run translation for each target language
     for lang in target_languages:
+        print(f"Translating {column_to_translate} columns on {lang}")
         translated_column = f"{column_to_translate}_{lang}"
         df[translated_column] = df[column_to_translate].apply(lambda x: translate_text(x, source_language, lang))
-        print(f"Translating {column_to_translate} columns on {lang}")
+       
 
     # Save to a new CSV
     df.to_csv(output_csv, index=False)
