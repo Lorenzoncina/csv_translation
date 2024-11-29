@@ -19,10 +19,7 @@ def translate_text(text, source_lang, target_lang):
 def translate_batch(texts, source_lang, target_lang):
     tokenizer.src_lang = source_lang
     encoded = tokenizer(texts, return_tensors="pt", padding=True, truncation=True)
-    try:
-        generated_tokens = model.generate(**encoded, forced_bos_token_id=tokenizer.get_lang_id(target_lang))
-    except Exception as e:
-        print(f"An unexpected error occurred: {e}")
+    generated_tokens = model.generate(**encoded, forced_bos_token_id=tokenizer.get_lang_id(target_lang))
     return tokenizer.batch_decode(generated_tokens, skip_special_tokens=True)
 
 
@@ -75,10 +72,14 @@ if __name__ == "__main__":
         translated_texts = []
         for i in range(0, len(df), batch_size):
             batch = df[column_to_translate].iloc[i:i + batch_size].tolist()
-            translated_texts.extend(translate_batch(batch, source_language, lang))
-            #print(translated_texts)
-            #break
-        df[translated_column] = translated_texts  
+            try:
+                translated_texts.extend(translate_batch(batch, source_language, lang))
+            except Exception as e:
+                print(f"An unexpected error occurred: {e}")
+        if len(translated_texts) == len(df):        
+            df[translated_column] = translated_texts  
+        else:
+            print(f"Translation failed for language: {lang}")
         
 
     # Save to a new CSV
