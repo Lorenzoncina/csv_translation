@@ -4,16 +4,25 @@ import argparse
 import pandas as pd
 from transformers import M2M100ForConditionalGeneration, M2M100Tokenizer
 
-#save_directory = "/home/concina/csv_translation/data/translation_model"
+
+
 # open source translation model from Hugging Face hub
 model_name = "facebook/m2m100_418M"
+def load_model(resources_folder):
+    # load models
+    if not os.listdir(resources_folder):  
+        print("Downloading and saving the model and tokenizer...")
+        tokenizer = M2M100Tokenizer.from_pretrained(model_name)
+        model = M2M100ForConditionalGeneration.from_pretrained(model_name)
+        tokenizer.save_pretrained(resources_folder)
+        model.save_pretrained(resources_folder)
+    else:
+        print("Loading model and tokenizer from the saved directory...")
+        tokenizer = M2M100Tokenizer.from_pretrained(resources_folder)
+        model = M2M100ForConditionalGeneration.from_pretrained(resources_folder)
 
-# translation function
-def translate_text(text, source_lang, target_lang):
-    tokenizer.src_lang = source_lang
-    encoded = tokenizer(text, return_tensors="pt", padding=True, truncation=True)
-    generated_tokens = model.generate(**encoded, forced_bos_token_id=tokenizer.get_lang_id(target_lang))
-    return tokenizer.batch_decode(generated_tokens, skip_special_tokens=True)[0]
+    return tokenizer, model
+    
 
 # batch translation
 def translate_batch(texts, source_lang, target_lang):
@@ -39,17 +48,8 @@ if __name__ == "__main__":
     resources_folder = args.resources_folder
     batch_size = int(args.batch_size)
 
-    # load models
-    if not os.listdir(resources_folder):  
-        print("Downloading and saving the model and tokenizer...")
-        tokenizer = M2M100Tokenizer.from_pretrained(model_name)
-        model = M2M100ForConditionalGeneration.from_pretrained(model_name)
-        tokenizer.save_pretrained(resources_folder)
-        model.save_pretrained(resources_folder)
-    else:
-        print("Loading model and tokenizer from the saved directory...")
-        tokenizer = M2M100Tokenizer.from_pretrained(resources_folder)
-        model = M2M100ForConditionalGeneration.from_pretrained(resources_folder)
+    
+    tokenizer, model = load_model(resources_folder)
     
     # we assume the source language of the keyword column of the CSV to be always EN
     source_language = "en" 
