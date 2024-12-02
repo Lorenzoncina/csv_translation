@@ -7,3 +7,4 @@ data/translation_model
 data/helsinky_models/
 code/dummy_csv.py
 code/test.py
+code/translate_keywords.py
