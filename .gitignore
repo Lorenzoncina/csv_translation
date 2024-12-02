@@ -1,3 +1,9 @@
 /venv
 code/.ipynb_checkpoints/translate_keywords-checkpoint.py
+code/.ipynb_checkpoints/transla_keywords_helsinky-checkpoint.py
+code/.ipynb_checkpoints/translate_keywords_helsinky-checkpoint.py
+code/.ipynb_checkpoints/translate_keywords_t5-checkpoint.py
 data/translation_model
+data/helsinky_models/
+code/dummy_csv.py
+code/test.py
