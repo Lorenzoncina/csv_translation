@@ -23,3 +23,6 @@ python code/translate_keywords_helsinky.py --help
 #for example
 python code/translate_keywords_helsinky.py --input_csv data/tm_field_terms.csv --output_csv data/translations/out_es_hensinky.csv --target_language es  --resources_folder data/helsinky_models/
 ```
+
+This script uses open source models from the Language Technology Research Group of Helsinky university. 
+To translate on more languages, check availabilities at this page: https://huggingface.co/Helsinki-NLP
